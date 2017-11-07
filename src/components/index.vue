@@ -83,19 +83,19 @@ export default {
           button {
                background: transparent;
                border: none;
-               color: #fff;
-               font-family: 'Roboto Condensed', sans-serif;
-               font-weight: 100;
-               font-size: 16px;
-               text-transform: uppercase;
-               letter-spacing: 2px;
                cursor: pointer;
-               @include buttonHover(.175s all ease-out);
+               @include buttonHover(.275s all ease-in-out);
                border: 1px solid #fff;
                position: relative;
                overflow: hidden;
 
                .titulo {
+                    color: #fff;
+                    font-family: 'Roboto Condensed', sans-serif;
+                    font-weight: 100;
+                    font-size: 10px;
+                    text-transform: uppercase;
+                    letter-spacing: 2px;
                     position: absolute;
                     z-index: 3;
                     top: 50%; left: 50%;
@@ -103,18 +103,29 @@ export default {
                }
 
                .button_icon {
-                    font-size: 25px;
-                    fill: #fff;
-                    position: absolute;
-                    z-index: 3;
-                    top: 50%; right: 10px;
-                    @include transY(-50%);
-                    outline: 1px solid #fff;
-                    padding: 5px;
+                    display: none;
+               }
+
+               @media screen and (min-width:760px) {
+                    .titulo {
+                         font-size:16px;
+                    }
+
+                    .button_icon {
+                         display: block;
+                         font-size: 25px;
+                         fill: #fff;
+                         position: absolute;
+                         z-index: 3;
+                         top: 50%; right: 10px;
+                         @include transY(-50%);
+                         outline: 1px solid #fff;
+                         padding: 5px;
+                    }
                }
 
                &:hover {
-                    font-weight: 900;
+                    font-weight: 400;
                     opacity: 0.95;
                }
 
