@@ -1,14 +1,22 @@
 <template >
      <div id="index">
           <div id="button_container">
-               <button><div class="titulo">player vs player</div></button>
-               <button><div class="titulo">player vs ia</div></button>
+               <button><div class="titulo">player vs player</div><player-icon class="button_icon"/></button>
+               <button><div class="titulo">player vs ia</div><bot-icon class="button_icon"/></button>
           </div>
      </div>
 </template>
 
 <script>
+
+import PlayerIcon from 'vue-material-design-icons/account.vue'
+import BotIcon from 'vue-material-design-icons/console.vue'
+
 export default {
+     components: {
+          'player-icon': PlayerIcon,
+          'bot-icon': BotIcon
+     },
      data() {
           return {
 
@@ -91,8 +99,18 @@ export default {
                     position: absolute;
                     z-index: 3;
                     top: 50%; left: 50%;
-                    @include transY(-50%);
                     @include transXY(-50%, -50%);
+               }
+
+               .button_icon {
+                    font-size: 25px;
+                    fill: #fff;
+                    position: absolute;
+                    z-index: 3;
+                    top: 50%; right: 10px;
+                    @include transY(-50%);
+                    outline: 1px solid #fff;
+                    padding: 5px;
                }
 
                &:hover {

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
 import Rutas from './rutas'
+import 'vue-material-design-icons/styles.css'
 
 Vue.use(VueRouter);
 
