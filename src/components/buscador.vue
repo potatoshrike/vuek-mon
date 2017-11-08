@@ -12,7 +12,8 @@ export default {
      data () {
           return {
                texto: '',
-               statsRandom: []
+               statsRandom: [],
+               pokemonData: []
     }
   },
   methods:{
@@ -28,6 +29,9 @@ export default {
              });
              console.log(this.texto);
           }
+
+        },
+        created(){
 
         }
 
