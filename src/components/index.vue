@@ -1,9 +1,9 @@
 <template >
      <div id="index">
           <div id="button_container">
-               <button><div class="titulo">player vs player</div><player-icon class="button_icon"/></button>
-               <button><div class="titulo">player vs ia</div><bot-icon class="button_icon"/></button>
-               <button><div class="titulo">pokédex</div><dex-icon class="button_icon"/></button>
+               <router-link id="menu_button" to="/" exact><div class="titulo">player vs player</div><player-icon class="button_icon"/></router-link>
+               <router-link id="menu_button" to="/" exact><div class="titulo">player vs ia</div><bot-icon class="button_icon"/></router-link>
+               <router-link id="menu_button" to="/buscador" exact><div class="titulo">pokédex</div><dex-icon class="button_icon"/></router-link>
           </div>
      </div>
 </template>
@@ -54,9 +54,9 @@ export default {
      }
 
      #index {
-          width:100%;
-          min-width:100vw;
-          height:100vh;
+          width: 100%;
+          min-width: 100vw;
+          height: 100vh;
           background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.5)), url(../assets/pikachu_bg.jpg);
           background-size: cover;
           background-repeat: no-repeat;
@@ -79,7 +79,7 @@ export default {
                grid-column-start: 2;
           }
 
-          button {
+          #menu_button {
                background: transparent;
                border: none;
                cursor: pointer;
