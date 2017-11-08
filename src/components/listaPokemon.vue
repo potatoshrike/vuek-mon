@@ -1,11 +1,9 @@
 <template>
   <div id="buscador">
      <input type="text" v-model="texto" v-on:keyup.enter="searchPokemon">
-
-     <div class="nombres" v-for="pokemon in listaPokemon" v-on:click="seleccionarPokemon" >{{pokemon}}</div>
-     <p>name: {{statsRandom[1]}}</p>
-     <p>id: {{statsRandom[0]}}</p>
-     <p>type: {{statsRandom[2]}}</p>
+     <div id="pokemon_lista">
+          <div id="pokemon_box" v-for="pokemon in listaPokemon" v-on:click="seleccionarPokemon" v-bind:style='{ backgroundImage: "url(" + imagenesPokemon[0] + ")", }'>{{pokemon}}</div>
+     </div>
   </div>
 </template>
 
@@ -14,38 +12,33 @@ export default {
      data () {
           return {
                texto: '',
-               statsRandom: [],
-               listaPokemon: []
-    }
-  },
-  methods:{
-
-      seleccionarPokemon: function(){
-        var pokemon = event.target.innerHTML;
-        this.$http.get("https://pokeapi.co/api/v2/pokemon/"+ pokemon).then(function(data){
-               return data.json();
-           }).then(function(data){
-               var jsonarreglo = [];
-                   jsonarreglo.push(data.id);
-                   jsonarreglo.push(data.name);
-                   jsonarreglo.push(data.types[0].type.name);
-                   this.statsRandom = jsonarreglo;
-                 });
-
-      }
-
-        },
-        created(){
-          this.$http.get("https://pokeapi.co/api/v2/pokemon/?limit=20").then(function(data){
-                 return data.json();
-             }).then(function(data){
-                 for (let key in data.results){
-                   this.listaPokemon.push(data.results[key].name)
-                  /*  this.listaPokemon[key].name = data.results[key].name;
-                    this.listaPokemon[key].id = key;*/
-                    }
+               dataBase: [],
+               listaPokemon: [],
+               imagenesPokemon: []
+          }
+     },
+     methods: {
+          seleccionarPokemon: function(){
+               var pokemon = event.target.innerHTML;
+               this.$http.get("https://pokeapi.co/api/v2/pokemon/"+ pokemon).then(function(data){
+                    return data.json();
+               }).then(function(data){
+                    var arregloBase = [];
+                    arregloBase.push(data.id);
+                    arregloBase.push(data.name);
+                    this.dataBase = arregloBase;
                });
-        }
+          }
+     },
+     created() {
+          this.$http.get("https://pokeapi.co/api/v2/pokemon/?limit=20").then(function(data){
+               return data.json();
+          }).then(function(data){
+               for (let key in data.results){
+                    this.listaPokemon.push(data.results[key].name);
+               }
+          });
+     }
 
 }
 </script>
@@ -61,24 +54,32 @@ export default {
           position: relative;
           overflow: hidden;
 
-          p {
-               width: 600px;
-               margin: 0 auto;
-               background: #000;
-               text-align: center;
-               color: #fff;
-          }
-
           input {
-               width:600px;
+               width: 600px;
                display: block;
                margin: 20px auto;
           }
      }
-     .nombres{
-       display: inline-block;
-       margin: 5px;
-       color: white;
-       cursor: pointer;
+
+     #pokemon_lista {
+          width: 100%;
+          max-width: 600px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          grid-gap: 5px;
+
+          div {
+               text-align: center;
+          }
+
+          #pokemon_box {
+               width: 96px;
+               height: 96px;
+               align-self: center;
+               justify-self: center;
+               background-repeat: no-repeat;
+               background-position: center center;
+          }
      }
 </style>

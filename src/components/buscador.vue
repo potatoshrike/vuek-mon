@@ -73,7 +73,7 @@ export default {
           overflow: hidden;
 
           input {
-               width:600px;
+               width: 600px;
                display: block;
                margin: 20px auto;
           }
