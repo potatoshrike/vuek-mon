@@ -2,10 +2,10 @@
   <div id="buscador">
      <input type="text" v-model="texto" v-on:keyup.enter="searchPokemon">
      <div id="pokemon_container">
-          <div id="pokemonSprite" style="background:url(https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png)"></div>
-          <div id="dato" class="titulo">charizard</div>
-          <div id="dato" class="titulo">fire — flying</div>
-          <div id="dato" class="titulo">solar-power — blaze</div>
+          <div id="pokemonSprite" v-bind:style='{ backgroundImage: "url(" + dataBase[2] + ")", }'></div>
+          <div id="dato" class="titulo">{{dataBase[1]}}</div>
+          <div id="dato" class="titulo">{{dataTipos[0]}} <span v-if="typeBool">—</span> {{dataTipos[1]}}</div>
+          <div id="dato" class="titulo">{{dataHabilidades[0]}} <span v-if="abilityBool">—</span> {{dataHabilidades[1]}}</div>
      </div>
   </div>
 </template>
@@ -17,7 +17,9 @@ export default {
                texto: '',
                dataBase: [],
                dataTipos: [],
-               dataHabilidades: []
+               dataHabilidades: [],
+               typeBool: false,
+               abilityBool: false
     }
   },
   methods:{
@@ -33,18 +35,22 @@ export default {
 
                     var arregloTipos = [];
                     if (data.types.length == 2) {
+                         this.typeBool = true;
                          arregloTipos.push(data.types[0].type.name);
                          arregloTipos.push(data.types[1].type.name);
                     } else {
+                         this.typeBool = false;
                          arregloTipos.push(data.types[0].type.name);
                     }
                     this.dataTipos = arregloTipos;
 
                     var arregloHabilidades = [];
                     if (data.types.length == 2) {
+                         this.abilityBool = true;
                          arregloHabilidades.push(data.abilities[0].ability.name);
                          arregloHabilidades.push(data.abilities[1].ability.name);
                     } else {
+                         this.abilityBool = false;
                          arregloHabilidades.push(data.abilities[0].ability.name);
                     }
                     this.dataHabilidades = arregloHabilidades;
@@ -107,6 +113,9 @@ export default {
                width: 96px;
                height: 96px;
                align-self: center;
+               justify-self: center;
+               background-repeat: no-repeat;
+               background-position: center center;
           }
 
           div {
