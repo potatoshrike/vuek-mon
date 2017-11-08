@@ -1,7 +1,9 @@
 <template>
   <div id="buscador">
-     <input type="text" v-model="texto">
-     <p>{{texto}}</p>
+     <input type="text" v-model="texto" v-on:keyup.enter="searchPokemon">
+     <p>name: {{statsRandom[1]}}</p>
+     <p>id: {{statsRandom[0]}}</p>
+     <p>type: {{statsRandom[2]}}</p>
   </div>
 </template>
 
@@ -9,9 +11,26 @@
 export default {
      data () {
           return {
-               texto: 'sustituye puej'
+               texto: '',
+               statsRandom: []
     }
-  }
+  },
+  methods:{
+    searchPokemon: function(){
+    this.$http.get("https://pokeapi.co/api/v2/pokemon/"+ this.texto).then(function(data){
+           return data.json();
+       }).then(function(data){
+           var jsonarreglo = [];
+               jsonarreglo.push(data.id);
+               jsonarreglo.push(data.name);
+               jsonarreglo.push(data.types[0].type.name);
+               this.statsRandom = jsonarreglo;
+             });
+             console.log(this.texto);
+          }
+
+        }
+
 }
 </script>
 
