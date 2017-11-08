@@ -3,6 +3,7 @@
           <div id="button_container">
                <button><div class="titulo">player vs player</div><player-icon class="button_icon"/></button>
                <button><div class="titulo">player vs ia</div><bot-icon class="button_icon"/></button>
+               <button><div class="titulo">pokédex</div><dex-icon class="button_icon"/></button>
           </div>
      </div>
 </template>
@@ -11,11 +12,13 @@
 
 import PlayerIcon from 'vue-material-design-icons/account.vue'
 import BotIcon from 'vue-material-design-icons/console.vue'
+import DexIcon from 'vue-material-design-icons/camera-metering-center'
 
 export default {
      components: {
           'player-icon': PlayerIcon,
-          'bot-icon': BotIcon
+          'bot-icon': BotIcon,
+          'dex-icon': DexIcon
      },
      data() {
           return {
@@ -72,12 +75,8 @@ export default {
           align-items: stretch;
           grid-gap: 10px;
 
-          :nth-child(1), :nth-child(2) {
+          :nth-child(1), :nth-child(2), :nth-child(3) {
                grid-column-start: 2;
-          }
-
-          :nth-child(2) {
-               grid-row-start: 2;
           }
 
           button {
