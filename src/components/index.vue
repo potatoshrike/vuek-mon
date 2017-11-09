@@ -4,6 +4,9 @@
                <router-link id="menu_button" to="/" exact><div class="titulo">player vs player</div><player-icon class="button_icon"/></router-link>
                <router-link id="menu_button" to="/" exact><div class="titulo">player vs ia</div><bot-icon class="button_icon"/></router-link>
                <router-link id="menu_button" to="/buscador" exact><div class="titulo">pokédex</div><dex-icon class="button_icon"/></router-link>
+               <button><div class="titulo">player vs player</div><player-icon class="button_icon"/></button>
+               <button><div class="titulo">player vs ia</div><bot-icon class="button_icon"/></button>
+
           </div>
      </div>
 </template>
@@ -14,11 +17,15 @@ import PlayerIcon from 'vue-material-design-icons/account.vue'
 import BotIcon from 'vue-material-design-icons/console.vue'
 import DexIcon from 'vue-material-design-icons/camera-metering-center'
 
+
 export default {
      components: {
           'player-icon': PlayerIcon,
+
           'bot-icon': BotIcon,
-          'dex-icon': DexIcon
+          'dex-icon': DexIcon,
+          'bot-icon': BotIcon
+
      },
      data() {
           return {
@@ -57,6 +64,9 @@ export default {
           width: 100%;
           min-width: 100vw;
           height: 100vh;
+          width:100%;
+          min-width:100vw;
+          height:100vh;
           background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.5)), url(../assets/pikachu_bg.jpg);
           background-size: cover;
           background-repeat: no-repeat;
@@ -80,6 +90,16 @@ export default {
           }
 
           #menu_button {
+          :nth-child(1), :nth-child(2) {
+               grid-column-start: 2;
+          }
+
+          :nth-child(2) {
+               grid-row-start: 2;
+          }
+
+          button {
+
                background: transparent;
                border: none;
                cursor: pointer;
@@ -87,6 +107,7 @@ export default {
                border: 1px solid #fff;
                position: relative;
                overflow: hidden;
+              }
 
                .titulo {
                     color: #fff;
