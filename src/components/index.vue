@@ -64,7 +64,7 @@ export default {
           background-size: cover;
           background-repeat: no-repeat;
           position: relative;
-          overflow: hidden;
+          overflow-x: hidden;
      }
 
      #button_container {

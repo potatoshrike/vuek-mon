@@ -30,7 +30,7 @@ export default {
                     var arregloBase = [];
                      arregloBase.push(data.id);
                      arregloBase.push(data.name);
-                     arregloBase.push(data.sprites.front_default);
+                     arregloBase.push('http://www.pkparaiso.com/imagenes/xy/sprites/animados/'+data.name+'.gif');
                      this.dataBase = arregloBase;
 
                     var arregloTipos = [];
@@ -70,7 +70,7 @@ export default {
           background-size: cover;
           background-repeat: no-repeat;
           position: relative;
-          overflow: hidden;
+          overflow-x: hidden;
 
           input {
                width: 600px;
@@ -110,10 +110,8 @@ export default {
           :nth-child(4) {grid-area: abilities;}
 
           #pokemonSprite {
-               width: 96px;
-               height: 96px;
                align-self: center;
-               justify-self: center;
+               height: 140px;
                background-repeat: no-repeat;
                background-position: center center;
           }
