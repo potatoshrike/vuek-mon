@@ -2,7 +2,7 @@
   <div id="buscador">
      <input type="text" v-model="texto" v-on:keyup.enter="searchPokemon">
      <div class="listaPokemon">
-         <div class="pokemonLista" v-on:click="seleccionarPokemon" v-for="pokemon in listaPokemon">{{pokemon}}</div>
+         <div class="pokemonLista" v-on:click="seleccionarPokemon" v-for="pokemon in pokemonMostrados">{{pokemon}}</div>
          <div class="navegador">
              <span v-on:click="restar"><larrow-icon  class="button_icon"/></span>
              <p>{{primerPokemon}} - {{ultimoPokemon}}</p>
@@ -36,12 +36,17 @@ export default {
                dataHabilidades: [],
                typeBool: false,
                abilityBool: false,
+               /*variable que recibe el json al crear la pagina en el metodo cargarPokemon*/
                listaPokemon :[],
+               /*variables que definen pokemones a mostrar mediante el metodo actualizarLista pokemonMostrados
+               toma valores de listaPokemon para no hacer request todo el tiempo*/
                primerPokemon: 1,
-               ultimoPokemon: 51
-    }
-  },
-  methods:{
+               ultimoPokemon: 51,
+               pokemonMostrados: []
+                  }
+              },
+    methods:{
+      /*funciones de flechas para moverse en el buscador de pokemon*/
       restar: function(){
           if(this.primerPokemon == 1){
               return;
@@ -49,8 +54,9 @@ export default {
               this.primerPokemon -= 50;
               this.ultimoPokemon -= 50;
           }
-          this.cargarPokemon();
+          this.actualizarLista();
       },
+
       sumar: function(){
           if(this.ultimoPokemon == 801){
               return;
@@ -58,9 +64,10 @@ export default {
               this.primerPokemon += 50;
                this.ultimoPokemon += 50;
           }
-          this.cargarPokemon();
+          this.actualizarLista();
       },
-    searchPokemon: function(){
+
+      searchPokemon: function(){
          this.$http.get("https://pokeapi.co/api/v2/pokemon/"+ this.texto).then(function(data){
                return data.json();
           }).then(function(data){
@@ -93,6 +100,7 @@ export default {
                     this.dataHabilidades = arregloHabilidades;
           });
      },
+
       seleccionarPokemon: function(){
         var pokemon = event.target.innerHTML;
         this.$http.get("https://pokeapi.co/api/v2/pokemon/"+ pokemon).then(function(data){
@@ -128,24 +136,32 @@ export default {
           });
 
       },
+
       cargarPokemon: function(){
-          this.$http.get("https://pokeapi.co/api/v2/pokemon/?limit=" + this.ultimoPokemon).then(function(data){
+        var i = 0;
+          this.$http.get("https://pokeapi.co/api/v2/pokemon/?limit=801").then(function(data){
                  return data.json();
              }).then(function(data){
                  for (let key in data.results){
-                     if(key >= this.primerPokemon - 1){
-                   this.listaPokemon.push(data.results[key].name)
-                  /*  this.listaPokemon[key].name = data.results[key].name;
-                    this.listaPokemon[key].id = key;*/
-                     }
-                    }
+                   this.listaPokemon.push(data.results[key].name);
+                  }
                });
-      }
-},
-    
-created(){
-          this.cargarPokemon();
+      },
+
+      actualizarLista: function(){
+        var i = 0;
+        var bandera = this.primerPokemon - 1;
+        for(bandera ;bandera<this.ultimoPokemon ; bandera++){
+          this.pokemonMostrados[i] = this.listaPokemon[bandera];
+          i++;
+          console.log(this.listaPokemon[bandera]);
         }
+      }
+    },
+
+    created(){
+        this.cargarPokemon();
+              }
 
 }
 </script>
@@ -175,12 +191,12 @@ created(){
         flex-flow: row wrap;
         justify-content: space-around;
         margin-bottom: 30px;
-         
+
     }
     .button_icon{
         font-size: 24px;
         margin: 0 10px;
-        
+
     }
     .navegador{
         display: flex;

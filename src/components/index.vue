@@ -4,76 +4,57 @@
                <router-link id="menu_button" to="/" exact><div class="titulo">player vs player</div><player-icon class="button_icon"/></router-link>
                <router-link id="menu_button" to="/" exact><div class="titulo">player vs ia</div><bot-icon class="button_icon"/></router-link>
                <router-link id="menu_button" to="/buscador" exact><div class="titulo">pokédex</div><dex-icon class="button_icon"/></router-link>
-               <button><div class="titulo">player vs player</div><player-icon class="button_icon"/></button>
-               <button><div class="titulo">player vs ia</div><bot-icon class="button_icon"/></button>
-
           </div>
      </div>
 </template>
 
 <script>
-
 import PlayerIcon from 'vue-material-design-icons/account.vue'
 import BotIcon from 'vue-material-design-icons/console.vue'
 import DexIcon from 'vue-material-design-icons/camera-metering-center'
-
-
 export default {
      components: {
           'player-icon': PlayerIcon,
-
           'bot-icon': BotIcon,
-          'dex-icon': DexIcon,
-          'bot-icon': BotIcon
-
+          'dex-icon': DexIcon
      },
      data() {
           return {
-
           }
      }
 }
 </script>
 
 <style lang="scss" scoped>
-
      $red: #E1332D;
-
      @mixin transY($params) {
           -webkit-transform:translateY($params);
           -moz-transform:translateY($params);
           -ms-transform:translateY($params);
           transform:translateY($params);
      }
-
      @mixin transXY($param1, $param2) {
           -webkit-transform:translate($param1, $param2);
           -moz-transform:translate($param1, $param2);
           -ms-transform:translate($param1, $param2);
           transform:translate($param1, $param2);
      }
-
      @mixin buttonHover($params) {
           -webkit-transition: $params;
           -moz-transition: $params;
           -ms-transition: $params;
           transition: $params;
      }
-
      #index {
           width: 100%;
           min-width: 100vw;
           height: 100vh;
-          width:100%;
-          min-width:100vw;
-          height:100vh;
           background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.5)), url(../assets/pikachu_bg.jpg);
           background-size: cover;
           background-repeat: no-repeat;
           position: relative;
           overflow: hidden;
      }
-
      #button_container {
           width: 100%;
           position: absolute;
@@ -84,22 +65,10 @@ export default {
           grid-auto-rows: 60px;
           align-items: stretch;
           grid-gap: 10px;
-
           :nth-child(1), :nth-child(2), :nth-child(3) {
                grid-column-start: 2;
           }
-
           #menu_button {
-          :nth-child(1), :nth-child(2) {
-               grid-column-start: 2;
-          }
-
-          :nth-child(2) {
-               grid-row-start: 2;
-          }
-
-          button {
-
                background: transparent;
                border: none;
                cursor: pointer;
@@ -107,8 +76,6 @@ export default {
                border: 1px solid #fff;
                position: relative;
                overflow: hidden;
-              }
-
                .titulo {
                     color: #fff;
                     font-family: 'Roboto Condensed', sans-serif;
@@ -121,16 +88,13 @@ export default {
                     top: 50%; left: 50%;
                     @include transXY(-50%, -50%);
                }
-
                .button_icon {
                     display: none;
                }
-
                @media screen and (min-width:760px) {
                     .titulo {
                          font-size:16px;
                     }
-
                     .button_icon {
                          display: block;
                          font-size: 25px;
@@ -143,12 +107,10 @@ export default {
                          padding: 5px;
                     }
                }
-
                &:hover {
                     font-weight: 400;
                     opacity: 0.95;
                }
-
                &:after {
                     content:'';
                     background: $red;
@@ -160,12 +122,9 @@ export default {
                     z-index: 2;
                     @include buttonHover(.375s all ease-in-out);
                }
-
                &:hover::after {
                     left: 0%;
                }
-
           }
      }
-
 </style>
