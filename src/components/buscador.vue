@@ -4,13 +4,13 @@
      <div class="listaPokemon">
          <div class="pokemonLista" v-on:click="seleccionarPokemon" v-for="pokemon in listaPokemon">{{pokemon}}</div>
          <div class="navegador">
-             <larrow-icon class="button_icon"/>
+             <span v-on:click="restar"><larrow-icon  class="button_icon"/></span>
              <p>{{primerPokemon}} - {{ultimoPokemon}}</p>
-             <rarrow-icon class="button_icon"/>
+             <span v-on:click="sumar"><rarrow-icon  class="button_icon"/></span>
          </div>
      </div>
      <div id="pokemon_container">
-          <div id="pokemonSprite" v-bind:style='{ backgroundImage: "url(" + dataBase[2] + ")", }'></div>
+          <div v-on:click="sumar" id="pokemonSprite" v-bind:style='{ backgroundImage: "url(" + dataBase[2] + ")", }'></div>
           <div id="dato" class="titulo">{{dataBase[1]}}</div>
           <div id="dato" class="titulo">{{dataTipos[0]}} <span v-if="typeBool">—</span> {{dataTipos[1]}}</div>
           <div id="dato" class="titulo">{{dataHabilidades[0]}} <span v-if="abilityBool">—</span> {{dataHabilidades[1]}}</div>
@@ -38,10 +38,28 @@ export default {
                abilityBool: false,
                listaPokemon :[],
                primerPokemon: 1,
-               ultimoPokemon: 50
+               ultimoPokemon: 51
     }
   },
   methods:{
+      restar: function(){
+          if(this.primerPokemon == 1){
+              return;
+          }else{
+              this.primerPokemon -= 50;
+              this.ultimoPokemon -= 50;
+          }
+          this.cargarPokemon();
+      },
+      sumar: function(){
+          if(this.ultimoPokemon == 801){
+              return;
+          }else{
+              this.primerPokemon += 50;
+               this.ultimoPokemon += 50;
+          }
+          this.cargarPokemon();
+      },
     searchPokemon: function(){
          this.$http.get("https://pokeapi.co/api/v2/pokemon/"+ this.texto).then(function(data){
                return data.json();
@@ -111,13 +129,15 @@ export default {
 
       },
       cargarPokemon: function(){
-          this.$http.get("https://pokeapi.co/api/v2/pokemon/?limit=50").then(function(data){
+          this.$http.get("https://pokeapi.co/api/v2/pokemon/?limit=" + this.ultimoPokemon).then(function(data){
                  return data.json();
              }).then(function(data){
                  for (let key in data.results){
+                     if(key >= this.primerPokemon - 1){
                    this.listaPokemon.push(data.results[key].name)
                   /*  this.listaPokemon[key].name = data.results[key].name;
                     this.listaPokemon[key].id = key;*/
+                     }
                     }
                });
       }
@@ -164,8 +184,10 @@ created(){
     }
     .navegador{
         display: flex;
-        justify-content: space-between;
-        
+        justify-content: center ;
+        text-align: center;
+        align-items: center;
+        width: 100%;
     }
     .pokemonLista{
         padding: 5px;
