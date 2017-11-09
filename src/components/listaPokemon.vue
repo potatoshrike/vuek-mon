@@ -48,6 +48,7 @@ export default {
                     this.listaImagen.push('http://www.pkparaiso.com/imagenes/xy/sprites/animados/'+data.results[key].name+'.gif');
                }
           });
+
      }
 
 }

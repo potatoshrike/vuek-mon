@@ -30,8 +30,13 @@ export default {
                     var arregloBase = [];
                      arregloBase.push(data.id);
                      arregloBase.push(data.name);
-                     arregloBase.push('http://www.pkparaiso.com/imagenes/xy/sprites/animados/'+data.name+'.gif');
-                     this.dataBase = arregloBase;
+
+                    if (data.id >= 721) {
+                         arregloBase.push('http://www.pkparaiso.com/imagenes/sol-luna/sprites/animados/'+data.name+'.gif');
+                    } else {
+                         arregloBase.push('http://www.pkparaiso.com/imagenes/xy/sprites/animados/'+data.name+'.gif');
+                    }
+                    this.dataBase = arregloBase;
 
                     var arregloTipos = [];
                     if (data.types.length == 2) {
