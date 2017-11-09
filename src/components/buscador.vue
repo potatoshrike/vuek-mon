@@ -1,13 +1,13 @@
 <template>
   <div id="buscador">
      <input type="text" v-model="texto" v-on:keyup.enter="searchPokemon">
+     <div class="navegador">
+         <span v-on:click="restar"><larrow-icon  class="button_icon"/></span>
+         <div>{{primerPokemon}} - {{ultimoPokemon}}</div>
+         <span v-on:click="sumar"><rarrow-icon  class="button_icon"/></span>
+     </div>
      <div class="listaPokemon">
          <div class="pokemonLista" v-on:click="seleccionarPokemon" v-for="pokemon in pokemonMostrados">{{pokemon}}</div>
-         <div class="navegador">
-             <span v-on:click="restar"><larrow-icon  class="button_icon"/></span>
-             <p>{{primerPokemon}} - {{ultimoPokemon}}</p>
-             <span v-on:click="sumar"><rarrow-icon  class="button_icon"/></span>
-         </div>
      </div>
      <div id="pokemon_container">
           <div v-on:click="sumar" id="pokemonSprite" v-bind:style='{ backgroundImage: "url(" + dataBase[2] + ")", }'></div>
@@ -107,7 +107,11 @@ export default {
                     var arregloBase = [];
                      arregloBase.push(data.id);
                      arregloBase.push(data.name);
-                     arregloBase.push(data.sprites.front_default);
+                     if (data.id >= 721) {
+                          arregloBase.push('http://www.pkparaiso.com/imagenes/sol-luna/sprites/animados/'+data.name+'.gif');
+                     } else {
+                          arregloBase.push('http://www.pkparaiso.com/imagenes/xy/sprites/animados/'+data.name+'.gif');
+                     }
                      this.dataBase = arregloBase;
 
                     var arregloTipos = [];
@@ -183,10 +187,9 @@ export default {
      }
 
      #pokemon_container {
-
           width: 100%;
           max-width: 60vw;
-          margin: 0 auto;
+          margin: 0 auto 30px;
           background: rgba(0,0,0,0.25);
           display: grid;
           grid-template-columns: repeat(3, 1fr);
@@ -205,83 +208,7 @@ export default {
                text-transform: uppercase;
                letter-spacing: 2px;
                background: rgba(0,0,0,0.45);
-          }
-
-          :nth-child(1) {grid-area: sprite;}
-          :nth-child(2) {grid-area: pkmnname;}
-          :nth-child(3) {grid-area: types;}
-          :nth-child(4) {grid-area: abilities;}
-
-          #pokemonSprite {
-               align-self: center;
-               height: 140px;
-               background-repeat: no-repeat;
-               background-position: center center;
-          }
-
-          div {
-               text-align: center;
-               padding: 10px;
-          }
-     }
-
-    .listaPokemon{
-        width: 100%;
-        max-width: 60vw;
-        margin: 0 auto;
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: space-around;
-        margin-bottom: 30px;
-    }
-
-    .button_icon {
-        font-size: 24px;
-        margin: 0 10px;
-    }
-    .navegador {
-        display: flex;
-        justify-content: center ;
-        text-align: center;
-        align-items: center;
-        width: 100%;
-    }
-
-    .pokemonLista {
-        padding: 5px;
-        background: white;
-        color: grey;
-        margin: 3px;
-        border-radius: 3px;
-
-          &:hover {
-               cursor: pointer;
-          }
-    }
-
-     #pokemon_container {
-
-          width: 100%;
-          max-width: 60vw;
-          margin: 0 auto;
-          background: rgba(0,0,0,0.25);
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          align-items: center;
-          grid-gap: 10px;
-          grid-template-areas:
-          ". sprite ."
-          "pkmnname types abilities";
-
-          #dato {
-               font-family: 'Roboto Condensed', sans-serif;
-               color: #fff;
-          }
-
-          .titulo {
-               text-transform: uppercase;
-               letter-spacing: 2px;
-               background: rgba(0,0,0,0.45);
+               font-size: 13px;
           }
 
           :nth-child(1) {grid-area: sprite;}
@@ -303,4 +230,58 @@ export default {
                padding: 10px;
           }
      }
+
+    .listaPokemon{
+        width: 100%;
+        max-width: 60vw;
+        margin: 0 auto 30px;
+        text-align: center;
+        font-family: 'Roboto Condensed', sans-serif;
+        font-weight:lighter;
+        display: grid;
+        grid-gap: 5px;
+        grid-template-columns: repeat(5, 1fr);
+        grid-auto-rows: 40px;
+    }
+
+    .button_icon {
+        font-size: 24px;
+        margin: 0 10px;
+    }
+
+    .navegador {
+         width: 100%;
+         max-width: 300px;
+         margin: 0 auto 30px;
+         display: grid;
+         grid-template-columns: repeat(3, 1fr);
+         grid-auto-rows: 30px;
+         align-items: center;
+
+         div {
+              text-align: center;
+              color: #fff;
+              height: 30px;
+              font-size: 20px;
+              font-family: 'Roboto Condensed', sans-serif;
+         }
+
+         div, span {
+              align-self: center;
+              justify-self: center;
+         }
+
+         .button_icon {
+              fill: #fff;
+              font-size: 25px;
+              cursor: pointer;
+         }
+    }
+
+    .pokemonLista {
+        background: rgba(0,0,0,0.75);
+        color: #fff;
+        cursor: pointer;
+        line-height: 40px;
+    }
 </style>

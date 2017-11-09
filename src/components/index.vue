@@ -72,7 +72,7 @@ export default {
           :nth-child(1), :nth-child(2), :nth-child(3), :nth-child(4) {
                grid-column-start: 2;
           }
-          
+
           #menu_button {
                background: transparent;
                border: none;
@@ -81,6 +81,7 @@ export default {
                border: 1px solid #fff;
                position: relative;
                overflow: hidden;
+               
                .titulo {
                     color: #fff;
                     font-family: 'Roboto Condensed', sans-serif;
