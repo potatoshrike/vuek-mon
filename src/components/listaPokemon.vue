@@ -76,7 +76,7 @@ export default {
      #pokemon_lista {
           width: 100%;
           max-width: 1000px;
-          margin: 0 auto;
+          margin: 25px auto;
           display: grid;
           grid-template-columns: repeat(5, 1fr);
           grid-auto-rows: 140px;
