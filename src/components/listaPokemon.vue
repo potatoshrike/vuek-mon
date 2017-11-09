@@ -1,6 +1,5 @@
 <template>
   <div id="listaPokemon">
-     <input type="text" v-model="texto" v-on:keyup.enter="searchPokemon">
      <div id="pokemon_lista">
           <div id="pokemon_box" v-for="(pokemon,indice) in listaPokemon" v-on:click="seleccionarPokemon" v-bind:style='{ backgroundImage: "url(" + listaImagen[indice] + ")", }'>{{pokemon}}</div>
      </div>
@@ -16,7 +15,6 @@
 export default {
      data () {
           return {
-               texto: '',
                dataBase: [],
                listaPokemon: [],
                listaImagen: [],
