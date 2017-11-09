@@ -36,17 +36,13 @@ export default {
                dataHabilidades: [],
                typeBool: false,
                abilityBool: false,
-               /*variable que recibe el json al crear la pagina en el metodo cargarPokemon*/
                listaPokemon :[],
-               /*variables que definen pokemones a mostrar mediante el metodo actualizarLista pokemonMostrados
-               toma valores de listaPokemon para no hacer request todo el tiempo*/
                primerPokemon: 1,
                ultimoPokemon: 51,
                pokemonMostrados: []
                   }
               },
     methods:{
-      /*funciones de flechas para moverse en el buscador de pokemon*/
       restar: function(){
           if(this.primerPokemon == 1){
               return;
@@ -183,6 +179,7 @@ export default {
                margin: 20px auto;
           }
      }
+
     .listaPokemon{
         width: 100%;
         max-width: 60vw;
@@ -191,29 +188,30 @@ export default {
         flex-flow: row wrap;
         justify-content: space-around;
         margin-bottom: 30px;
-
     }
-    .button_icon{
+
+    .button_icon {
         font-size: 24px;
         margin: 0 10px;
-
     }
-    .navegador{
+    .navegador {
         display: flex;
         justify-content: center ;
         text-align: center;
         align-items: center;
         width: 100%;
     }
-    .pokemonLista{
+
+    .pokemonLista {
         padding: 5px;
         background: white;
         color: grey;
         margin: 3px;
         border-radius: 3px;
-    }
-    .pokemonLista:hover{
-        cursor: pointer;
+
+          &:hover {
+               cursor: pointer;
+          }
     }
 
      #pokemon_container {
