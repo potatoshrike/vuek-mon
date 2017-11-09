@@ -80,7 +80,7 @@ export default {
           input {
                width: 600px;
                display: block;
-               margin: 20px auto;
+               margin: 80px auto 25px;
           }
      }
 
