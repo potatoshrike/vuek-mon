@@ -1,13 +1,13 @@
 <template>
   <div id="buscador">
      <input type="text" v-model="texto" v-on:keyup.enter="searchPokemon">
+     <div class="navegador">
+         <span v-on:click="restar"><larrow-icon  class="button_icon"/></span>
+         <div>{{primerPokemon}} - {{ultimoPokemon}}</div>
+         <span v-on:click="sumar"><rarrow-icon  class="button_icon"/></span>
+     </div>
      <div class="listaPokemon">
          <div class="pokemonLista" v-on:click="seleccionarPokemon" v-for="pokemon in pokemonMostrados">{{pokemon}}</div>
-         <div class="navegador">
-             <span v-on:click="restar"><larrow-icon  class="button_icon"/></span>
-             <p>{{primerPokemon}} - {{ultimoPokemon}}</p>
-             <span v-on:click="sumar"><rarrow-icon  class="button_icon"/></span>
-         </div>
      </div>
      <div id="pokemon_container">
           <div v-on:click="sumar" id="pokemonSprite" v-bind:style='{ backgroundImage: "url(" + dataBase[2] + ")", }'></div>
@@ -117,10 +117,10 @@ export default {
                      arregloBase.push(data.id);
                      arregloBase.push(data.name);
                      if (data.id >= 721) {
-                    arregloBase.push('http://www.pkparaiso.com/imagenes/sol-luna/sprites/animados/'+data.name+'.gif');
-               } else {
-                    arregloBase.push('http://www.pkparaiso.com/imagenes/xy/sprites/animados/'+data.name+'.gif');
-               }
+                          arregloBase.push('http://www.pkparaiso.com/imagenes/sol-luna/sprites/animados/'+data.name+'.gif');
+                     } else {
+                          arregloBase.push('http://www.pkparaiso.com/imagenes/xy/sprites/animados/'+data.name+'.gif');
+                     }
                      this.dataBase = arregloBase;
 
                     var arregloTipos = [];
@@ -144,7 +144,7 @@ export default {
                          arregloHabilidades.push(data.abilities[0].ability.name);
                     }
                     this.dataHabilidades = arregloHabilidades;
-            
+
             /*loop para obetener habilidades de pokemon seleccionado*/
             var tamaño = data.moves.length;
             var contador = 0;
@@ -154,9 +154,9 @@ export default {
                      this.habilidades.push(data.moves[i].move.name);
                    }
                }
-               
-            /*fin de loop*/ 
-          
+
+            /*fin de loop*/
+
           });
 
       },
@@ -211,10 +211,9 @@ font-family: 'Roboto Condensed', sans-serif;
      }
 
      #pokemon_container {
-
           width: 100%;
           max-width: 60vw;
-          margin: 0 auto;
+          margin: 0 auto 30px;
           background: rgba(0,0,0,0.25);
           display: grid;
           grid-template-columns: repeat(3, 1fr);
@@ -233,6 +232,7 @@ font-family: 'Roboto Condensed', sans-serif;
                text-transform: uppercase;
                letter-spacing: 2px;
                background: rgba(0,0,0,0.45);
+               font-size: 13px;
           }
 
           :nth-child(1) {grid-area: sprite;}
@@ -241,8 +241,10 @@ font-family: 'Roboto Condensed', sans-serif;
           :nth-child(4) {grid-area: abilities;}
 
           #pokemonSprite {
+               width: 96px;
+               height: 96px;
                align-self: center;
-               height: 140px;
+               justify-self: center;
                background-repeat: no-repeat;
                background-position: center center;
           }
@@ -256,35 +258,55 @@ font-family: 'Roboto Condensed', sans-serif;
     .listaPokemon{
         width: 100%;
         max-width: 60vw;
-        margin: 0 auto;
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: space-around;
-        margin-bottom: 30px;
+        margin: 0 auto 30px;
+        text-align: center;
+        font-family: 'Roboto Condensed', sans-serif;
+        font-weight:lighter;
+        display: grid;
+        grid-gap: 5px;
+        grid-template-columns: repeat(5, 1fr);
+        grid-auto-rows: 40px;
     }
 
     .button_icon {
         font-size: 24px;
         margin: 0 10px;
     }
+
     .navegador {
-        display: flex;
-        justify-content: center ;
-        text-align: center;
-        align-items: center;
-        width: 100%;
+         width: 100%;
+         max-width: 300px;
+         margin: 0 auto 30px;
+         display: grid;
+         grid-template-columns: repeat(3, 1fr);
+         grid-auto-rows: 30px;
+         align-items: center;
+
+         div {
+              text-align: center;
+              color: #fff;
+              height: 30px;
+              font-size: 20px;
+              font-family: 'Roboto Condensed', sans-serif;
+         }
+
+         div, span {
+              align-self: center;
+              justify-self: center;
+         }
+
+         .button_icon {
+              fill: #fff;
+              font-size: 25px;
+              cursor: pointer;
+         }
     }
 
     .pokemonLista {
-        padding: 5px;
-        background: white;
-        color: grey;
-        margin: 3px;
-        border-radius: 3px;
-
-          &:hover {
-               cursor: pointer;
-          }
+        background: rgba(0,0,0,0.75);
+        color: #fff;
+        cursor: pointer;
+        line-height: 40px;
     }
 
      #pokemon_container {
@@ -332,7 +354,7 @@ font-family: 'Roboto Condensed', sans-serif;
           }
      }
     .movimientosWrapp{
-       
+
         width: 100%;
         height: 300px;
         max-width: 60%;
@@ -368,7 +390,7 @@ font-family: 'Roboto Condensed', sans-serif;
             height: 80%;
             width: 30%;
             background: black;
-            
+
         }
         .movimientos::-webkit-scrollbar-thumb
             {
