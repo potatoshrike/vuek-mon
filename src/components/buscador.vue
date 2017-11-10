@@ -98,6 +98,13 @@ export default {
                     arregloHabilidades.push(data.abilities[0].ability.name);
                }
                this.dataHabilidades = arregloHabilidades;
+             var tamaño = data.moves.length;
+              this.habilidades = [];
+               for(var i = 0; i<tamaño; i++){
+                   if(data.moves[i].version_group_details[0].version_group.name == "sun-moon"){
+                     this.habilidades.push(data.moves[i].move.name);
+                   }
+               }
           });
      },
 
@@ -109,7 +116,11 @@ export default {
                     var arregloBase = [];
                      arregloBase.push(data.id);
                      arregloBase.push(data.name);
-                     arregloBase.push(data.sprites.front_default);
+                     if (data.id >= 721) {
+                    arregloBase.push('http://www.pkparaiso.com/imagenes/sol-luna/sprites/animados/'+data.name+'.gif');
+               } else {
+                    arregloBase.push('http://www.pkparaiso.com/imagenes/xy/sprites/animados/'+data.name+'.gif');
+               }
                      this.dataBase = arregloBase;
 
                     var arregloTipos = [];
