@@ -15,7 +15,7 @@
           <div id="dato" class="titulo">{{dataTipos[0]}} <span v-if="typeBool">—</span> {{dataTipos[1]}}</div>
           <div id="dato" class="titulo">{{dataHabilidades[0]}} <span v-if="abilityBool">—</span> {{dataHabilidades[1]}}</div>
      </div>
-     <div class="movimientos"><h2>Movimientos del pokemon</h2><br><p v-for="habilidad in habilidades">{{habilidad}}</p> </div>
+     <div class="movimientosWrapp"><h2>Movimientos del pokemon</h2><div class="movimientos"><p v-for="habilidad in habilidades">{{habilidad}}</p></div> </div>
   </div>
 </template>
 
@@ -179,6 +179,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    *{
+font-family: 'Roboto Condensed', sans-serif;
+}
      #buscador {
           width:100%;
           min-width:100vw;
@@ -317,21 +320,50 @@ export default {
                padding: 10px;
           }
      }
-    .movimientos{
+    .movimientosWrapp{
+       
         width: 100%;
+        height: 300px;
         max-width: 60%;
-        margin: 0 auto;
+        margin: 20px auto;
         display: flex;
         flex-wrap: wrap;
-        margin-bottom: 20px;
-        
+        background: silver;
+        overflow: hidden;
+         border-radius: 5px;
+        /*bordes redonditos are life*/
         h2{
             width: 100%;
+            background: #FFF;
+            margin: 0;
+            height: 20%;
+            text-align: center;
+            line-height: 2.5;
         }
         p{
             color: white;
             display: block;
             margin: 2px 4px;
+            &:hover{
+                cursor:pointer;
+                color: black;
+                background: white;
+            }
         }
+        .movimientos{
+            margin: 0;
+            overflow-y: scroll;
+            position: relative;
+            height: 80%;
+            width: 30%;
+            background: black;
+            
+        }
+        .movimientos::-webkit-scrollbar-thumb
+            {
+                border-radius: 10px;
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+                background-color: #555;
+            }
     }
 </style>
