@@ -101,10 +101,9 @@ export default {
                this.$http.get("https://pokeapi.co/api/v2/move/"+ ataque).then(function(data){
                     return data.json();
                  }).then(function(data){
-                    console.log(data.effect_entries[0]);
+                    var efecto = data.effect_entries[0].short_effect
                     var poder = data.power;
                     var clase = data.damage_class.name;
-                    if (data.name == 'sonic-boom') {poder = 20;}
                     this.playerTurn(poder, clase, jugador, enemigo);
                });
           }
@@ -159,6 +158,7 @@ export default {
                color: gray;
                font-family: 'Roboto Condensed', sans-serif;
                text-transform: uppercase;
+               text-align: center;
           }
 
           #playerStatus1.activo, #playerStatus2.activo, {
