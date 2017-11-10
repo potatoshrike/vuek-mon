@@ -15,6 +15,7 @@
           <div id="dato" class="titulo">{{dataTipos[0]}} <span v-if="typeBool">—</span> {{dataTipos[1]}}</div>
           <div id="dato" class="titulo">{{dataHabilidades[0]}} <span v-if="abilityBool">—</span> {{dataHabilidades[1]}}</div>
      </div>
+     <div class="movimientos"><h2>Movimientos del pokemon</h2><br><p v-for="habilidad in habilidades">{{habilidad}}</p> </div>
   </div>
 </template>
 
@@ -37,7 +38,8 @@ export default {
                listaPokemon :[],
                primerPokemon: 1,
                ultimoPokemon: 51,
-               pokemonMostrados: []
+               pokemonMostrados: [],
+               habilidades: []
                   }
               },
     methods:{
@@ -131,6 +133,19 @@ export default {
                          arregloHabilidades.push(data.abilities[0].ability.name);
                     }
                     this.dataHabilidades = arregloHabilidades;
+            
+            /*loop para obetener habilidades de pokemon seleccionado*/
+            var tamaño = data.moves.length;
+            var contador = 0;
+            this.habilidades = [];
+               for(var i = 0; i<tamaño; i++){
+                   if(data.moves[i].version_group_details[0].version_group.name == "sun-moon"){
+                     this.habilidades.push(data.moves[i].move.name);
+                   }
+               }
+               
+            /*fin de loop*/ 
+          
           });
 
       },
@@ -152,7 +167,6 @@ export default {
         for(bandera ;bandera<this.ultimoPokemon ; bandera++){
           this.pokemonMostrados[i] = this.listaPokemon[bandera];
           i++;
-          console.log(this.listaPokemon[bandera]);
         }
       }
     },
@@ -303,4 +317,21 @@ export default {
                padding: 10px;
           }
      }
+    .movimientos{
+        width: 100%;
+        max-width: 60%;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        
+        h2{
+            width: 100%;
+        }
+        p{
+            color: white;
+            display: block;
+            margin: 2px 4px;
+        }
+    }
 </style>
