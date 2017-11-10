@@ -5,7 +5,7 @@
                <li><router-link to="/" id="pvp" class="url">pvp</router-link></li>
                <li><router-link to="/" id="pve" class="url">pve</router-link></li>
                <li><router-link to="/buscador" id="pokedex" class="url">pokedex</router-link></li>
-               <li><router-link to="/listaPokemon" id="teampickear" class="url">picker</router-link></li>
+               <li><router-link to="/simulador" id="simulador" class="url">simulador</router-link></li>
           </ul>
      </div>
 </template>

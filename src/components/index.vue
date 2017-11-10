@@ -4,7 +4,7 @@
                <router-link id="menu_button" to="/" exact><div class="titulo">player vs player</div><player-icon class="button_icon"/></router-link>
                <router-link id="menu_button" to="/" exact><div class="titulo">player vs ia</div><bot-icon class="button_icon"/></router-link>
                <router-link id="menu_button" to="/buscador" exact><div class="titulo">pokedex</div><dex-icon class="button_icon"/></router-link>
-               <router-link id="menu_button" to="/listaPokemon" exact><div class="titulo">team picker</div><list-icon class="button_icon"/></router-link>
+               <router-link id="menu_button" to="/simulador" exact><div class="titulo">simulador</div><sim-icon class="button_icon"/></router-link>
           </div>
      </div>
 </template>
@@ -13,13 +13,14 @@
 import PlayerIcon from 'vue-material-design-icons/account.vue'
 import BotIcon from 'vue-material-design-icons/console.vue'
 import DexIcon from 'vue-material-design-icons/camera-metering-center'
-import ListIcon from 'vue-material-design-icons/view-list'
+import SimIcon from 'vue-material-design-icons/settings'
+
 export default {
      components: {
           'player-icon': PlayerIcon,
           'bot-icon': BotIcon,
           'dex-icon': DexIcon,
-          'list-icon': ListIcon
+          'sim-icon': SimIcon
      },
      data() {
           return {
@@ -29,7 +30,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
      $red: #E1332D;
+     
      @mixin transY($params) {
           -webkit-transform:translateY($params);
           -moz-transform:translateY($params);
@@ -48,6 +51,7 @@ export default {
           -ms-transition: $params;
           transition: $params;
      }
+
      #index {
           width: 100%;
           min-width: 100vw;
@@ -81,7 +85,7 @@ export default {
                border: 1px solid #fff;
                position: relative;
                overflow: hidden;
-               
+
                .titulo {
                     color: #fff;
                     font-family: 'Roboto Condensed', sans-serif;
