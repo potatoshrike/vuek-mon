@@ -2,21 +2,21 @@
      <div id="simulador">
           <div id="ataques_container">
                <div id="playerOne">
-                    <div v-bind:id="listadoAtaques[0]" class="ataque" v-on:click="atacar(1)">{{listadoAtaques[0]}}</div>
-                    <div v-bind:id="listadoAtaques[44]" class="ataque" v-on:click="atacar(1)">{{listadoAtaques[44]}}</div>
-                    <div v-bind:id="listadoAtaques[48]" class="ataque" v-on:click="atacar(1)">{{listadoAtaques[48]}}</div>
-                    <div v-bind:id="listadoAtaques[78]" class="ataque" v-on:click="atacar(1)">{{listadoAtaques[78]}}</div>
+                    <div v-bind:id="listadoAtaques[0]" class="ataque" v-on:click="atacar(1, 2)">{{listadoAtaques[0]}}</div>
+                    <div v-bind:id="listadoAtaques[44]" class="ataque" v-on:click="atacar(1, 2)">{{listadoAtaques[44]}}</div>
+                    <div v-bind:id="listadoAtaques[48]" class="ataque" v-on:click="atacar(1, 2)">{{listadoAtaques[48]}}</div>
+                    <div v-bind:id="listadoAtaques[78]" class="ataque" v-on:click="atacar(1, 2)">{{listadoAtaques[78]}}</div>
                </div>
                <div id="playerTwo">
-                    <div v-bind:id="listadoAtaques[0]" class="ataque" v-on:click="atacar(2)">{{listadoAtaques[0]}}</div>
-                    <div v-bind:id="listadoAtaques[44]" class="ataque" v-on:click="atacar(2)">{{listadoAtaques[44]}}</div>
-                    <div v-bind:id="listadoAtaques[48]" class="ataque" v-on:click="atacar(2)">{{listadoAtaques[48]}}</div>
-                    <div v-bind:id="listadoAtaques[78]" class="ataque" v-on:click="atacar(2)">{{listadoAtaques[78]}}</div>
+                    <div v-bind:id="listadoAtaques[0]" class="ataque" v-on:click="atacar(2, 1)">{{listadoAtaques[0]}}</div>
+                    <div v-bind:id="listadoAtaques[44]" class="ataque" v-on:click="atacar(2, 1)">{{listadoAtaques[44]}}</div>
+                    <div v-bind:id="listadoAtaques[48]" class="ataque" v-on:click="atacar(2, 1)">{{listadoAtaques[48]}}</div>
+                    <div v-bind:id="listadoAtaques[78]" class="ataque" v-on:click="atacar(2, 1)">{{listadoAtaques[78]}}</div>
                </div>
           </div>
           <div id="controller_container">
-               <button v-on:click="playerOne" v-bind:class="{activo: p1bool}">player one</button>
-               <button v-on:click="playerTwo" v-bind:class="{activo: p2bool}">player two</button>
+               <div id="playerStatus1" class="activo">player one</div>
+               <div id="playerStatus2">player two</div>
                <div id="p1b" class="progress_bar"><div class="bar_value" v-bind:style='{ width: p1life + "%"}'>{{p1life}}</div></div>
                <div id="p2b" class="progress_bar"><div class="bar_value" v-bind:style='{ width: p2life + "%"}'>{{p2life}}</div></div>
           </div>
@@ -34,8 +34,6 @@ export default {
                listadoAtaques: [],
                listadoClases: [],
                accionActual: 'Es el turno del jugador 1',
-               p1bool: true,
-               p2bool: false,
                p1life: 100,
                p2life: 100
           }
@@ -71,55 +69,43 @@ export default {
                accionesContenedor.appendChild(msgBox);
                return poder;
           },
-          playerOne(poder, clase) {
-               if (this.p1bool == true) {
+          playerTurn(poder, clase, jugador, enemigo) {
+               var player = '#playerStatus' + jugador;
+               var enemy = '#playerStatus' + enemigo;
+
+               if ($(player).hasClass("activo")) {
                     if (clase == 'physical') {
-                         var resultado = this.accionTurnoFisico('1', poder);
+                         var resultado = this.accionTurnoFisico(jugador, poder);
                     } else if (clase == 'special') {
-                         var resultado = this.accionTurnoEspecial('1', poder);
+                         var resultado = this.accionTurnoEspecial(jugador, poder);
                     } else if (clase == 'status') {
-                         var resultado = this.accionTurnoEstado('1', poder);
+                         var resultado = this.accionTurnoEstado(jugador, poder);
                     }
 
-                    this.p2life = this.p2life - resultado;
-                    this.p2bool = true;
-                    this.p1bool = false;
-                    this.accionActual = 'Es el turno del jugador 2';
+                    if(jugador == 1) {
+                         this.p2life = this.p2life - resultado;
+                    } else {
+                         this.p1life = this.p1life - resultado;
+                    }
+
+                    $(player).toggleClass("activo", false);
+                    $(enemy).toggleClass("activo", true);
+
+                    this.accionActual = 'Es el turno del jugador ' + enemy;
                } else {
                     alert('¡Aún no es tu turno!');
                }
           },
-          playerTwo(poder, clase) {
-               if (this.p2bool == true) {
-                    if (clase == 'physical') {
-                         var resultado = this.accionTurnoFisico('1', poder);
-                    } else if (clase == 'special') {
-                         var resultado = this.accionTurnoEspecial('1', poder);
-                    } else if (clase == 'status') {
-                         var resultado = this.accionTurnoEstado('1', poder);
-                    }
-
-                    this.p1life = this.p1life - resultado;
-                    this.p1bool = true;
-                    this.p2bool = false;
-                    this.accionActual = 'Es el turno del jugador 1';
-               } else {
-                    alert('¡Aún no es tu turno!');
-               }
-          },
-          atacar(jugador) {
+          atacar(jugador, enemigo) {
                var ataque = event.target.innerHTML;
-               this.$http.get("https://cors.now.sh/https://pokeapi.co/api/v2/move/"+ ataque).then(function(data){
+               this.$http.get("https://pokeapi.co/api/v2/move/"+ ataque).then(function(data){
                     return data.json();
                  }).then(function(data){
+                    console.log(data.effect_entries[0]);
                     var poder = data.power;
                     var clase = data.damage_class.name;
                     if (data.name == 'sonic-boom') {poder = 20;}
-                    if (jugador == 1 ) {
-                         this.playerOne(poder, clase);
-                    } else if (jugador == 2) {
-                         this.playerTwo(poder, clase);
-                    }
+                    this.playerTurn(poder, clase, jugador, enemigo);
                });
           }
      },
@@ -166,7 +152,7 @@ export default {
           grid-template-columns: 1fr 1fr;
           grid-gap: 10px;
 
-          button {
+          #playerStatus1, #playerStatus2 {
                padding: 20px;
                background: transparent;
                border: 1px solid gray;
@@ -175,7 +161,7 @@ export default {
                text-transform: uppercase;
           }
 
-          button.activo {
+          #playerStatus1.activo, #playerStatus2.activo, {
                padding: 20px;
                background: transparent;
                border: 1px solid #fff;
