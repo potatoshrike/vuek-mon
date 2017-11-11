@@ -35,13 +35,28 @@ export default {
                listadoClases: [],
                accionActual: 'Es el turno del jugador 1',
                p1life: 100,
-               p2life: 100
+               p2life: 100,
+               p1AttackDebuff: 0,
+               p2AttackDebuff: 0
           }
      },
      created() {
           this.cargarAtaques();
      },
      methods: {
+          generarDano(jugador, poder) {
+               if (jugador == 1 ) {
+                    this.p2life = this.p2life - poder;
+               } else {
+                    this.p1life = this.p1life - poder;
+               }
+          },
+          generarMensaje(texto) {
+               var msgBox = document.createElement("p");
+               msgBox.appendChild(texto);
+               var accionesContenedor = document.getElementById("log_acciones");
+               accionesContenedor.appendChild(msgBox);
+          },
           cargarAtaques() {
                this.$http.get("https://pokeapi.co/api/v2/move/?limit=717").then(function(data){
                     return data.json();
@@ -52,59 +67,59 @@ export default {
                });
           },
           accionTurnoFisico(jugador, poder) {
-               var msgBox = document.createElement("p");
-               var texto = document.createTextNode("El jugador " + jugador + " causó: " + poder + " de daño.");
-               msgBox.appendChild(texto);
-
-               var accionesContenedor = document.getElementById("log_acciones");
-               accionesContenedor.appendChild(msgBox);
-               return poder;
+               var texto = document.createTextNode("El jugador " + jugador + " causó: " + poder + " de daño físico");
+               this.generarMensaje(texto);
+               this.generarDano(jugador, poder);
           },
           accionTurnoEspecial(jugador, poder) {
-               var msgBox = document.createElement("p");
-               var texto = document.createTextNode("El jugador " + jugador + " causó: " + poder + " de daño.");
-               msgBox.appendChild(texto);
-
-               var accionesContenedor = document.getElementById("log_acciones");
-               accionesContenedor.appendChild(msgBox);
-               return poder;
+               var texto = document.createTextNode("El jugador " + jugador + " causó: " + poder + " de daño especial");
+               this.generarMensaje(texto);
+               this.generarDano(jugador, poder);
           },
-          playerTurn(poder, clase, jugador, enemigo) {
+          accionTurnoEstado(jugador, enemigo, efectoEstadistica, efectoValor) {
+               if (efectoEstadistica == 'attack') {
+                    if (jugador == 1) {this.p2AttackDebuff += efectoValor;} else {this.p1AttackDebuff += efectoValor;}
+                    var texto = document.createTextNode("El ataque del jugador " + enemigo + " disminuyó en: " + efectoValor);
+                    this.generarMensaje(texto);
+               }
+          },
+          playerTurno(tipo, efectoEstadistica, efectoValor, poder, clase, jugador, enemigo) {
                var player = '#playerStatus' + jugador;
                var enemy = '#playerStatus' + enemigo;
 
                if ($(player).hasClass("activo")) {
                     if (clase == 'physical') {
-                         var resultado = this.accionTurnoFisico(jugador, poder);
+                         this.accionTurnoFisico(jugador, poder);
                     } else if (clase == 'special') {
-                         var resultado = this.accionTurnoEspecial(jugador, poder);
+                         this.accionTurnoEspecial(jugador, poder);
                     } else if (clase == 'status') {
-                         var resultado = this.accionTurnoEstado(jugador, poder);
-                    }
-
-                    if(jugador == 1) {
-                         this.p2life = this.p2life - resultado;
-                    } else {
-                         this.p1life = this.p1life - resultado;
+                         this.accionTurnoEstado(jugador, enemigo, efectoEstadistica, efectoValor);
                     }
 
                     $(player).toggleClass("activo", false);
                     $(enemy).toggleClass("activo", true);
 
-                    this.accionActual = 'Es el turno del jugador ' + enemy;
+                    this.accionActual = 'Es el turno del jugador ' + enemigo;
                } else {
                     alert('¡Aún no es tu turno!');
                }
           },
           atacar(jugador, enemigo) {
                var ataque = event.target.innerHTML;
-               this.$http.get("https://pokeapi.co/api/v2/move/"+ ataque).then(function(data){
+               this.$http.get("https://pokeapi.co/api/v2/move/"+ ataque + '/?limit=1').then(function(data){
                     return data.json();
                  }).then(function(data){
-                    var efecto = data.effect_entries[0].short_effect
+                    var tipo = data.type.name;
+                    if (data.stat_changes.length > 0) {
+                         var efectoEstadistica = data.stat_changes[0].stat.name;
+                         var efectoValor = data.stat_changes[0].change;
+                    } else {
+                         var efectoEstadistica = null;
+                         var efectoValor = null;
+                    }
                     var poder = data.power;
                     var clase = data.damage_class.name;
-                    this.playerTurn(poder, clase, jugador, enemigo);
+                    this.playerTurno(tipo, efectoEstadistica, efectoValor, poder, clase, jugador, enemigo);
                });
           }
      },
