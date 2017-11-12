@@ -6,7 +6,12 @@
          <div>{{primerPokemon}} - {{ultimoPokemon}}</div>
          <span v-on:click="sumar"><rarrow-icon  class="button_icon"/></span>
      </div>
+
      <div class="listaPokemon">
+       <div v-if="carga" class="spinner">
+          <div class="double-bounce1"></div>
+          <div class="double-bounce2"></div>
+      </div>
          <div class="pokemonLista" v-on:click="seleccionarPokemon" v-for="pokemon in pokemonMostrados">{{pokemon}}</div>
      </div>
      <div id="pokemon_container" v-if="appStart">
@@ -15,6 +20,10 @@
           <div id="dato" class="titulo">{{dataTipos[0]}} <span v-if="typeBool">—</span> {{dataTipos[1]}}</div>
           <div id="dato" class="titulo">{{dataHabilidades[0]}} <span v-if="abilityBool">—</span> {{dataHabilidades[1]}}</div>
      </div>
+     <div v-if="carga2" class="spinner">
+        <div class="double-bounce1"></div>
+        <div class="double-bounce2"></div>
+    </div>
      <div class="movimientosWrapp" v-if="appStart">
           <h2>Movimientos del pokemon</h2>
           <div class="movimientos">
@@ -30,7 +39,12 @@
               <p>Damage Class: {{this.habilidadDescripcion.damage_class}}</p>
             </div>
             <div class="PokemonDescripcion">
-              <p>jeje</p>
+              <h3>{{this.pokemonDescripcion.name}}</h3>
+              <p>Description: {{this.pokemonDescripcion.flavor_text}}</p>
+              <p>Generation: {{this.pokemonDescripcion.generation}}</p>
+              <p>Type: {{this.pokemonDescripcion.type}}</p>
+              <p>Height: {{this.pokemonDescripcion.height}}</p>
+              <p>Weight: {{this.pokemonDescripcion.weight}}</p>
             </div>
 
      </div>
@@ -50,6 +64,8 @@ export default {
                appStart: false,
                texto: '',
                dataBase: [],
+               carga: false,
+               carga2: false,
                dataTipos: [],
                dataHabilidades: [],
                typeBool: false,
@@ -59,9 +75,10 @@ export default {
                ultimoPokemon: 51,
                pokemonMostrados: [],
                habilidades: [],
-               habilidadDescripcion: {name: "",pp:"", power:"", accuracy:"", effect_chance:"", damage_class:""}
-                  }
-              },
+               habilidadDescripcion: {name: "",pp:"", power:"", accuracy:"", effect_chance:"", damage_class:""},
+               pokemonDescripcion: {name:"", flavor_text:"", generation:"", type:"", height:"", weight:""}
+              }
+            },
     methods:{
       restar: function(){
           if(this.primerPokemon == 1){
@@ -84,6 +101,7 @@ export default {
       },
 
       searchPokemon: function(){
+        this.habilidades = [];
          this.$http.get("https://pokeapi.co/api/v2/pokemon/"+ this.texto).then(function(data){
                return data.json();
           }).then(function(data){
@@ -130,10 +148,14 @@ export default {
      },
 
       seleccionarPokemon: function(){
+        this.carga2 = true;
+        this.habilidades = [];
         var pokemon = event.target.innerHTML;
         this.$http.get("https://pokeapi.co/api/v2/pokemon/"+ pokemon).then(function(data){
                return data.json();
            }).then(function(data){
+                    this.pokemonDescripcion.weight = data.weight;
+                    this.pokemonDescripcion.height = data.height;
                     var arregloBase = [];
                      arregloBase.push(data.id);
                      arregloBase.push(data.name);
@@ -175,21 +197,40 @@ export default {
                      this.habilidades.push(data.moves[i].move.name);
                    }
                }
-
             /*fin de loop*/
-            this.appStart = true;
           });
+          this.$http.get("https://pokeapi.co/api/v2/pokemon-species/"+ pokemon).then(function(data){
+                 return data.json();
+             }).then(function(data){
+               this.pokemonDescripcion.name = data.name;
+               this.pokemonDescripcion.type = data.egg_groups[0].name;
+               this.pokemonDescripcion.generation = data.generation.name;
+               var tamaño2 = data.flavor_text_entries.length;
+               for(var x = 0; x<tamaño2; x++){
+                 if(data.flavor_text_entries[x].language.name == "en"){
+                 this.pokemonDescripcion.flavor_text = data.flavor_text_entries[x].flavor_text;
+                 break;
+               }
+               }
+               this.carga2 = false;
+             });
+               this.appStart = true;
 
       },
 
       cargarPokemon: function(){
         var i = 0;
+        this.carga = true;
           this.$http.get("https://pokeapi.co/api/v2/pokemon/?limit=801").then(function(data){
                  return data.json();
              }).then(function(data){
                  for (let key in data.results){
                    this.listaPokemon.push(data.results[key].name);
                   }
+                  this.carga = false;
+                  this.primerPokemon = 1;
+                  this.ultimoPokemon = 51;
+                  this.actualizarLista;
                });
       },
 
@@ -202,6 +243,7 @@ export default {
         }
       },
       cargarMovimiento: function(){
+        this.carga2 = true;
         var habilidad = event.target.innerHTML;
         this.$http.get("https://pokeapi.co/api/v2/move/" + habilidad).then(function(data){
                return data.json();
@@ -212,6 +254,7 @@ export default {
                this.habilidadDescripcion.power = data.pp;
                this.habilidadDescripcion.effect_chance = data.effect_chance;
                this.habilidadDescripcion.damage_class = data.damage_class.name;
+               this.carga2 = false;
              });
       }
 
@@ -345,8 +388,50 @@ font-family: 'Roboto Condensed', sans-serif;
         font-size: 13px;
     }
 
-     #pokemon_container {
+    .spinner {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  margin: 100px auto;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
 
+.double-bounce1, .double-bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+  animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+  0%, 100% {
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% {
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
+
+     #pokemon_container {
           width: 100%;
           max-width: 60vw;
           margin: 0 auto;
@@ -369,7 +454,6 @@ font-family: 'Roboto Condensed', sans-serif;
                letter-spacing: 2px;
                background: rgba(0,0,0,0.45);
           }
-
           :nth-child(1) {grid-area: sprite;}
           :nth-child(2) {grid-area: pkmnname;}
           :nth-child(3) {grid-area: types;}
@@ -383,22 +467,23 @@ font-family: 'Roboto Condensed', sans-serif;
                background-repeat: no-repeat;
                background-position: center center;
           }
-
           div {
                text-align: center;
                padding: 10px;
           }
+
      }
     .movimientosWrapp {
 
          width: 100%;
          max-width: 60vw;
          margin: 25px auto;
-         height: 300px;
+         height: 340px;
          background: rgba(0,0,0,0.5);
          display: grid;
          grid-template-columns: repeat(8, 1fr);
          overflow: hidden;
+
          p {
            color: white;
            padding-left: 25px;
@@ -421,8 +506,6 @@ font-family: 'Roboto Condensed', sans-serif;
           grid-column-end: 9;
         }
 
-
-
         .movimientos {
           grid-row-start: 2;
           grid-column-start: 1;
@@ -430,23 +513,17 @@ font-family: 'Roboto Condensed', sans-serif;
           overflow-y: auto;
           position: relative;
           background: black;
-
-
           &::-webkit-scrollbar {width:9px!important;}
-
           &::-webkit-scrollbar-track-piece {
                background-color: #fff;
                border: 4px solid #000;
           }
-
           &::-webkit-scrollbar-thumb {background-color: #fff;}
-
         p:hover {
            cursor: pointer;
            color: #000;
            background: #fff;
                 }
-
             }
 
         }
@@ -455,23 +532,21 @@ font-family: 'Roboto Condensed', sans-serif;
       grid-row-start: 2;
       grid-column-start: 3;
       grid-column-end: 5;
-
-      h3{
-        text-align: center;
-        text-transform: uppercase;
-        color: white;
-        font-family: 'Roboto Condensed', sans-serif;
-        font-weight: 100;
-        letter-spacing: 2px;
-      }
     }
-
     .PokemonDescripcion{
       grid-row-start: 2;
       grid-column-start: 5;
       grid-column-end: 9;
-
     }
-
+.PokemonDescripcion, .habilidadDescripcion{
+  h3{
+    text-align: center;
+    text-transform: uppercase;
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 100;
+    letter-spacing: 2px;
+  }
+}
 
 </style>
