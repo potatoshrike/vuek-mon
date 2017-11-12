@@ -9,13 +9,21 @@
      <div class="listaPokemon">
          <div class="pokemonLista" v-on:click="seleccionarPokemon" v-for="pokemon in pokemonMostrados">{{pokemon}}</div>
      </div>
-     <div id="pokemon_container">
+     <div id="pokemon_container" v-if="appStart">
           <div v-on:click="sumar" id="pokemonSprite" v-bind:style='{ backgroundImage: "url(" + dataBase[2] + ")", }'></div>
           <div id="dato" class="titulo">{{dataBase[1]}}</div>
           <div id="dato" class="titulo">{{dataTipos[0]}} <span v-if="typeBool">—</span> {{dataTipos[1]}}</div>
           <div id="dato" class="titulo">{{dataHabilidades[0]}} <span v-if="abilityBool">—</span> {{dataHabilidades[1]}}</div>
      </div>
-     <div class="movimientosWrapp"><h2>Movimientos del pokemon</h2><div class="movimientos"><p v-for="habilidad in habilidades">{{habilidad}}</p></div> </div>
+     <div class="movimientosWrapp" v-if="appStart">
+          <h2>Movimientos del pokemon</h2>
+          <div class="movimientos">
+               <p v-for="habilidad in habilidades">{{habilidad}}</p>
+          </div>
+          <div id="info_box">
+               <!-- aquí iría la información del ataque seleccionado -->
+          </div>
+     </div>
   </div>
 </template>
 
@@ -29,6 +37,7 @@ export default {
      },
      data () {
           return {
+               appStart: false,
                texto: '',
                dataBase: [],
                dataTipos: [],
@@ -105,6 +114,7 @@ export default {
                      this.habilidades.push(data.moves[i].move.name);
                    }
                }
+               this.appStart = true;
           });
      },
 
@@ -156,7 +166,7 @@ export default {
                }
 
             /*fin de loop*/
-
+            this.appStart = true;
           });
 
       },
@@ -264,7 +274,7 @@ font-family: 'Roboto Condensed', sans-serif;
         font-weight:lighter;
         display: grid;
         grid-gap: 5px;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(10, 1fr);
         grid-auto-rows: 40px;
     }
 
@@ -303,10 +313,11 @@ font-family: 'Roboto Condensed', sans-serif;
     }
 
     .pokemonLista {
-        background: rgba(0,0,0,0.75);
+        background: rgba(0,0,0,0.95);
         color: #fff;
         cursor: pointer;
         line-height: 40px;
+        font-size: 13px;
     }
 
      #pokemon_container {
@@ -353,50 +364,71 @@ font-family: 'Roboto Condensed', sans-serif;
                padding: 10px;
           }
      }
-    .movimientosWrapp{
+    .movimientosWrapp {
 
-        width: 100%;
-        height: 300px;
-        max-width: 60%;
-        margin: 20px auto;
-        display: flex;
-        flex-wrap: wrap;
-        background: silver;
-        overflow: hidden;
-         border-radius: 5px;
-        /*bordes redonditos are life*/
-        h2{
-            width: 100%;
-            background: #FFF;
-            margin: 0;
-            height: 20%;
-            text-align: center;
-            line-height: 2.5;
+         width: 100%;
+         max-width: 60vw;
+         margin: 25px auto;
+         height: 300px;
+         background: rgba(0,0,0,0.5);
+         display: grid;
+         grid-template-columns: repeat(7, 1fr);
+         overflow: hidden;
+
+        h2 {
+          width: 100%;
+          font-family: 'Montserrat', sans-serif;
+          color: #fff;
+          text-transform: uppercase;
+          background: rgba(0,0,0,0.25);
+          margin: 0;
+          height: 60px;
+          text-align: center;
+          line-height: 2.5;
+          grid-column-start: 1;
+          grid-column-end: 8;
         }
-        p{
-            color: white;
-            display: block;
-            margin: 2px 4px;
-            &:hover{
-                cursor:pointer;
-                color: black;
-                background: white;
+
+        p {
+          color: white;
+          padding-left: 25px;
+          font-family: 'Roboto Condensed', sans-serif;
+          font-weight: 100;
+          letter-spacing: 1px;
+
+            &:hover {
+               cursor: pointer;
+               color: #000;
+               background: #fff;
             }
-        }
-        .movimientos{
-            margin: 0;
-            overflow-y: scroll;
-            position: relative;
-            height: 80%;
-            width: 30%;
-            background: black;
 
         }
-        .movimientos::-webkit-scrollbar-thumb
-            {
-                border-radius: 10px;
-                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-                background-color: #555;
-            }
+
+        .movimientos {
+          grid-row-start: 2;
+          grid-column-start: 1;
+          grid-column-end: 4;
+          overflow-y: auto;
+          position: relative;
+          background: black;
+
+          &::-webkit-scrollbar {width:9px!important;}
+
+          &::-webkit-scrollbar-track-piece {
+               background-color: #fff;
+               border: 4px solid #000;
+          }
+
+          &::-webkit-scrollbar-thumb {background-color: #fff;}
+
+        }
+
+    }
+
+    #info_box {
+         background: rgba(0,0,0,0.25);
+         grid-row-start: 2;
+         grid-column-start: 4;
+         grid-column-end: 8;
     }
 </style>
