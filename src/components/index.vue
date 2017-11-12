@@ -3,7 +3,8 @@
           <div id="button_container">
                <router-link id="menu_button" to="/" exact><div class="titulo">player vs player</div><player-icon class="button_icon"/></router-link>
                <router-link id="menu_button" to="/" exact><div class="titulo">player vs ia</div><bot-icon class="button_icon"/></router-link>
-               <router-link id="menu_button" to="/buscador" exact><div class="titulo">pokédex</div><dex-icon class="button_icon"/></router-link>
+               <router-link id="menu_button" to="/buscador" exact><div class="titulo">pokedex</div><dex-icon class="button_icon"/></router-link>
+               <router-link id="menu_button" to="/simulador" exact><div class="titulo">simulador</div><sim-icon class="button_icon"/></router-link>
           </div>
      </div>
 </template>
@@ -12,11 +13,14 @@
 import PlayerIcon from 'vue-material-design-icons/account.vue'
 import BotIcon from 'vue-material-design-icons/console.vue'
 import DexIcon from 'vue-material-design-icons/camera-metering-center'
+import SimIcon from 'vue-material-design-icons/settings'
+
 export default {
      components: {
           'player-icon': PlayerIcon,
           'bot-icon': BotIcon,
-          'dex-icon': DexIcon
+          'dex-icon': DexIcon,
+          'sim-icon': SimIcon
      },
      data() {
           return {
@@ -26,7 +30,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
      $red: #E1332D;
+     
      @mixin transY($params) {
           -webkit-transform:translateY($params);
           -moz-transform:translateY($params);
@@ -45,6 +51,7 @@ export default {
           -ms-transition: $params;
           transition: $params;
      }
+
      #index {
           width: 100%;
           min-width: 100vw;
@@ -53,7 +60,7 @@ export default {
           background-size: cover;
           background-repeat: no-repeat;
           position: relative;
-          overflow: hidden;
+          overflow-x: hidden;
      }
      #button_container {
           width: 100%;
@@ -65,9 +72,11 @@ export default {
           grid-auto-rows: 60px;
           align-items: stretch;
           grid-gap: 10px;
-          :nth-child(1), :nth-child(2), :nth-child(3) {
+
+          :nth-child(1), :nth-child(2), :nth-child(3), :nth-child(4) {
                grid-column-start: 2;
           }
+
           #menu_button {
                background: transparent;
                border: none;
@@ -76,6 +85,7 @@ export default {
                border: 1px solid #fff;
                position: relative;
                overflow: hidden;
+
                .titulo {
                     color: #fff;
                     font-family: 'Roboto Condensed', sans-serif;
