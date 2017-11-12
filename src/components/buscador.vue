@@ -18,11 +18,21 @@
      <div class="movimientosWrapp" v-if="appStart">
           <h2>Movimientos del pokemon</h2>
           <div class="movimientos">
-               <p v-for="habilidad in habilidades">{{habilidad}}</p>
+               <p v-on:click="cargarMovimiento" v-for="habilidad in habilidades">{{habilidad}}</p>
           </div>
-          <div id="info_box">
-               <!-- aquí iría la información del ataque seleccionado -->
-          </div>
+
+            <div class="habilidadDescripcion">
+              <h3>{{this.habilidadDescripcion.name}} </h3>
+              <p>PP: {{this.habilidadDescripcion.pp}}</p>
+              <p>Power: {{this.habilidadDescripcion.power}}</p>
+              <p>Accuracy: {{this.habilidadDescripcion.accuracy}}</p>
+              <p>Effect Chance: {{this.habilidadDescripcion.effect_chance}}</p>
+              <p>Damage Class: {{this.habilidadDescripcion.damage_class}}</p>
+            </div>
+            <div class="PokemonDescripcion">
+              <p>jeje</p>
+            </div>
+
      </div>
   </div>
 </template>
@@ -48,7 +58,8 @@ export default {
                primerPokemon: 1,
                ultimoPokemon: 51,
                pokemonMostrados: [],
-               habilidades: []
+               habilidades: [],
+               habilidadDescripcion: {name: "",pp:"", power:"", accuracy:"", effect_chance:"", damage_class:""}
                   }
               },
     methods:{
@@ -189,7 +200,21 @@ export default {
           this.pokemonMostrados[i] = this.listaPokemon[bandera];
           i++;
         }
+      },
+      cargarMovimiento: function(){
+        var habilidad = event.target.innerHTML;
+        this.$http.get("https://pokeapi.co/api/v2/move/" + habilidad).then(function(data){
+               return data.json();
+           }).then(function(data){
+               this.habilidadDescripcion.pp = data.pp;
+               this.habilidadDescripcion.name = data.name;
+               this.habilidadDescripcion.accuracy = data.accuracy;
+               this.habilidadDescripcion.power = data.pp;
+               this.habilidadDescripcion.effect_chance = data.effect_chance;
+               this.habilidadDescripcion.damage_class = data.damage_class.name;
+             });
       }
+
     },
 
     created() {
@@ -372,8 +397,15 @@ font-family: 'Roboto Condensed', sans-serif;
          height: 300px;
          background: rgba(0,0,0,0.5);
          display: grid;
-         grid-template-columns: repeat(7, 1fr);
+         grid-template-columns: repeat(8, 1fr);
          overflow: hidden;
+         p {
+           color: white;
+           padding-left: 25px;
+           font-family: 'Roboto Condensed', sans-serif;
+           font-weight: 100;
+           letter-spacing: 1px;
+          }
 
         h2 {
           width: 100%;
@@ -386,31 +418,19 @@ font-family: 'Roboto Condensed', sans-serif;
           text-align: center;
           line-height: 2.5;
           grid-column-start: 1;
-          grid-column-end: 8;
+          grid-column-end: 9;
         }
 
-        p {
-          color: white;
-          padding-left: 25px;
-          font-family: 'Roboto Condensed', sans-serif;
-          font-weight: 100;
-          letter-spacing: 1px;
 
-            &:hover {
-               cursor: pointer;
-               color: #000;
-               background: #fff;
-            }
-
-        }
 
         .movimientos {
           grid-row-start: 2;
           grid-column-start: 1;
-          grid-column-end: 4;
+          grid-column-end: 3;
           overflow-y: auto;
           position: relative;
           background: black;
+
 
           &::-webkit-scrollbar {width:9px!important;}
 
@@ -421,14 +441,37 @@ font-family: 'Roboto Condensed', sans-serif;
 
           &::-webkit-scrollbar-thumb {background-color: #fff;}
 
+        p:hover {
+           cursor: pointer;
+           color: #000;
+           background: #fff;
+                }
+
+            }
+
         }
 
+    .habilidadDescripcion{
+      grid-row-start: 2;
+      grid-column-start: 3;
+      grid-column-end: 5;
+
+      h3{
+        text-align: center;
+        text-transform: uppercase;
+        color: white;
+        font-family: 'Roboto Condensed', sans-serif;
+        font-weight: 100;
+        letter-spacing: 2px;
+      }
     }
 
-    #info_box {
-         background: rgba(0,0,0,0.25);
-         grid-row-start: 2;
-         grid-column-start: 4;
-         grid-column-end: 8;
+    .PokemonDescripcion{
+      grid-row-start: 2;
+      grid-column-start: 5;
+      grid-column-end: 9;
+
     }
+
+
 </style>
