@@ -154,7 +154,6 @@ export default {
         for(bandera ;bandera<this.ultimoPokemon ; bandera++){
           this.pokemonMostrados[i] = this.listaPokemon[bandera];
           i++;
-          console.log(this.listaPokemon[bandera]);
         }
       }
     },
