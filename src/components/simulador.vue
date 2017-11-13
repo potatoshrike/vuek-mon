@@ -5,7 +5,7 @@
                     <div v-bind:id="listadoAtaques[0]" class="ataque" v-on:click="atacar(1, 2)">{{listadoAtaques[0]}}</div>
                     <div v-bind:id="listadoAtaques[44]" class="ataque" v-on:click="atacar(1, 2)">{{listadoAtaques[44]}}</div>
                     <div v-bind:id="listadoAtaques[48]" class="ataque" v-on:click="atacar(1, 2)">{{listadoAtaques[48]}}</div>
-                    <div v-bind:id="listadoAtaques[78]" class="ataque" v-on:click="atacar(1, 2)">{{listadoAtaques[78]}}</div>
+                    <div v-bind:id="listadoAtaques[100]" class="ataque" v-on:click="atacar(1, 2)">{{listadoAtaques[100]}}</div>
                </div>
                <div id="playerTwo">
                     <div v-bind:id="listadoAtaques[0]" class="ataque" v-on:click="atacar(2, 1)">{{listadoAtaques[0]}}</div>
@@ -15,8 +15,8 @@
                </div>
           </div>
           <div id="controller_container">
-               <div id="playerStatus1" class="activo">player one</div>
-               <div id="playerStatus2">player two</div>
+               <div id="playerStatus1" class="activo">player one — lvl <span id="p1Level">{{p1level}}</span></div>
+               <div id="playerStatus2">player two — lvl <span id="p2Level">{{p2level}}</span></div>
                <div id="p1b" class="progress_bar"><div class="bar_value" v-bind:style='{ width: p1life + "%"}'>{{p1life}}</div></div>
                <div id="p2b" class="progress_bar"><div class="bar_value" v-bind:style='{ width: p2life + "%"}'>{{p2life}}</div></div>
           </div>
@@ -37,19 +37,47 @@ export default {
                p1life: 100,
                p2life: 100,
                p1AttackDebuff: 0,
-               p2AttackDebuff: 0
+               p2AttackDebuff: 0,
+               p1level: 100,
+               p2level: 100
           }
      },
      created() {
           this.cargarAtaques();
      },
      methods: {
-          generarDano(jugador, poder) {
-               if (jugador == 1 ) {
-                    this.p2life = this.p2life - poder;
+          determinarPoder(jugador, poder, efectoCorto) {
+               if (poder == null) {
+                    if (efectoCorto.startsWith("Inflicts")) {
+                         if (efectoCorto == "Inflicts damage equal to the user's level.") {
+                              var nivelUsuario = document.getElementById('p' + jugador + 'Level').innerHTML;
+                              poder = nivelUsuario;
+                              return poder;
+                         } else {
+                              var extraerNumero = /\d+/g;
+                              poder = efectoCorto.match(extraerNumero);
+                              return poder;
+                         }
+                    }
                } else {
-                    this.p1life = this.p1life - poder;
+                    return poder;
                }
+          },
+          generarDano(jugador, poder, efectoCorto) {
+                    if (jugador == 1 ) {
+                         if (p1AttackDebuff > 0) {
+                              if (p1AttackDebuff == -1) {this.p2life = (this.p2life - poder) * 0.75;}
+                         } else {
+                              this.p2life = this.p2life - poder;
+                         }
+
+                    } else {
+                         if (p2AttackDebuff > 0) {
+                              if (p2AttackDebuff == -1) {this.p1life = (this.p1life - poder) * 0.75;}
+                         } else {
+                              this.p1life = this.p1life - poder;
+                         }
+                    }
           },
           generarMensaje(texto) {
                var msgBox = document.createElement("p");
@@ -66,32 +94,34 @@ export default {
                     }
                });
           },
-          accionTurnoFisico(jugador, poder) {
+          accionTurnoFisico(jugador, poder, efectoCorto) {
+               poder = this.determinarPoder(jugador, poder, efectoCorto);
                var texto = document.createTextNode("El jugador " + jugador + " causó: " + poder + " de daño físico");
                this.generarMensaje(texto);
-               this.generarDano(jugador, poder);
+               this.generarDano(jugador, poder, efectoCorto);
           },
-          accionTurnoEspecial(jugador, poder) {
+          accionTurnoEspecial(jugador, poder, efectoCorto) {
+               poder = this.determinarPoder(jugador, poder, efectoCorto);
                var texto = document.createTextNode("El jugador " + jugador + " causó: " + poder + " de daño especial");
                this.generarMensaje(texto);
-               this.generarDano(jugador, poder);
+               this.generarDano(jugador, poder, efectoCorto);
           },
           accionTurnoEstado(jugador, enemigo, efectoEstadistica, efectoValor) {
                if (efectoEstadistica == 'attack') {
                     if (jugador == 1) {this.p2AttackDebuff += efectoValor;} else {this.p1AttackDebuff += efectoValor;}
-                    var texto = document.createTextNode("El ataque del jugador " + enemigo + " disminuyó en: " + efectoValor);
+                    var texto = document.createTextNode("El ataque del jugador " + enemigo + " se modificó en: " + efectoValor);
                     this.generarMensaje(texto);
                }
           },
-          playerTurno(tipo, efectoEstadistica, efectoValor, poder, clase, jugador, enemigo) {
+          playerTurno(tipo, efectoEstadistica, efectoValor, poder, clase, jugador, enemigo, efectoCorto) {
                var player = '#playerStatus' + jugador;
                var enemy = '#playerStatus' + enemigo;
 
                if ($(player).hasClass("activo")) {
                     if (clase == 'physical') {
-                         this.accionTurnoFisico(jugador, poder);
+                         this.accionTurnoFisico(jugador, poder, efectoCorto);
                     } else if (clase == 'special') {
-                         this.accionTurnoEspecial(jugador, poder);
+                         this.accionTurnoEspecial(jugador, poder, efectoCorto);
                     } else if (clase == 'status') {
                          this.accionTurnoEstado(jugador, enemigo, efectoEstadistica, efectoValor);
                     }
@@ -119,7 +149,9 @@ export default {
                     }
                     var poder = data.power;
                     var clase = data.damage_class.name;
-                    this.playerTurno(tipo, efectoEstadistica, efectoValor, poder, clase, jugador, enemigo);
+                    var efectoCorto = data.effect_entries[0].short_effect;
+                    console.log(efectoCorto);
+                    this.playerTurno(tipo, efectoEstadistica, efectoValor, poder, clase, jugador, enemigo, efectoCorto);
                });
           }
      },
