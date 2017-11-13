@@ -46,6 +46,29 @@ export default {
           this.cargarAtaques();
      },
      methods: {
+          calcularEstados(poder, jugador) {
+               if (jugador == 1 ) {
+                    if (this.p1AttackDebuff != 0 ) {
+                         if (this.p1AttackDebuff == -1) {poder = poder * 0.75}
+                         if (this.p1AttackDebuff == -2) {poder = poder * 0.50}
+                         if (this.p1AttackDebuff == -3) {poder = poder * 0.25}
+                         if (this.p1AttackDebuff <= -4) {poder = poder * 0.25}
+                         return poder;
+                    } else {
+                         return poder;
+                    }
+               } else {
+                    if (this.p2AttackDebuff != 0 ) {
+                         if (this.p2AttackDebuff == -1) {poder = poder * 0.75}
+                         if (this.p2AttackDebuff == -2) {poder = poder * 0.50}
+                         if (this.p2AttackDebuff == -3) {poder = poder * 0.25}
+                         if (this.p2AttackDebuff <= -4) {poder = poder * 0.25}
+                         return poder;
+                    } else {
+                         return poder;
+                    }
+               }
+          },
           determinarPoder(jugador, poder, efectoCorto) {
                if (poder == null) {
                     if (efectoCorto.startsWith("Inflicts")) {
@@ -65,18 +88,9 @@ export default {
           },
           generarDano(jugador, poder, efectoCorto) {
                     if (jugador == 1 ) {
-                         if (p1AttackDebuff > 0) {
-                              if (p1AttackDebuff == -1) {this.p2life = (this.p2life - poder) * 0.75;}
-                         } else {
                               this.p2life = this.p2life - poder;
-                         }
-
                     } else {
-                         if (p2AttackDebuff > 0) {
-                              if (p2AttackDebuff == -1) {this.p1life = (this.p1life - poder) * 0.75;}
-                         } else {
                               this.p1life = this.p1life - poder;
-                         }
                     }
           },
           generarMensaje(texto) {
@@ -96,12 +110,14 @@ export default {
           },
           accionTurnoFisico(jugador, poder, efectoCorto) {
                poder = this.determinarPoder(jugador, poder, efectoCorto);
+               poder = this.calcularEstados(poder, jugador);
                var texto = document.createTextNode("El jugador " + jugador + " causó: " + poder + " de daño físico");
                this.generarMensaje(texto);
                this.generarDano(jugador, poder, efectoCorto);
           },
           accionTurnoEspecial(jugador, poder, efectoCorto) {
                poder = this.determinarPoder(jugador, poder, efectoCorto);
+               poder = this.calcularEstados(poder, jugador);
                var texto = document.createTextNode("El jugador " + jugador + " causó: " + poder + " de daño especial");
                this.generarMensaje(texto);
                this.generarDano(jugador, poder, efectoCorto);
@@ -109,7 +125,20 @@ export default {
           accionTurnoEstado(jugador, enemigo, efectoEstadistica, efectoValor) {
                if (efectoEstadistica == 'attack') {
                     if (jugador == 1) {this.p2AttackDebuff += efectoValor;} else {this.p1AttackDebuff += efectoValor;}
-                    var texto = document.createTextNode("El ataque del jugador " + enemigo + " se modificó en: " + efectoValor);
+                    if (jugador == 1) {
+                         if (this.p1AttackDebuff <= -4) {
+                              var texto = document.createTextNode("¡El ataque del jugador 1 no puede seguir disminuyendo!");
+                         } else {
+                              var texto = document.createTextNode("El ataque del jugador " + enemigo + " se modificó en: " + efectoValor);
+                         }
+                    } else {
+                         if (this.p2AttackDebuff <= -4) {
+                              var texto = document.createTextNode("¡El ataque del jugador 2 no puede seguir disminuyendo!");
+                         } else {
+                              var texto = document.createTextNode("El ataque del jugador " + enemigo + " se modificó en: " + efectoValor);
+                         }
+                    }
+
                     this.generarMensaje(texto);
                }
           },
