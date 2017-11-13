@@ -228,9 +228,8 @@ export default {
                    this.listaPokemon.push(data.results[key].name);
                   }
                   this.carga = false;
-                  this.primerPokemon = 1;
-                  this.ultimoPokemon = 51;
-                  this.actualizarLista;
+                  this.sumar();
+                  this.restar();
                });
       },
 
@@ -478,7 +477,7 @@ font-family: 'Roboto Condensed', sans-serif;
          width: 100%;
          max-width: 60vw;
          margin: 25px auto;
-         height: 340px;
+         height: 350px;
          background: rgba(0,0,0,0.5);
          display: grid;
          grid-template-columns: repeat(8, 1fr);
